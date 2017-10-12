@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="MicroflowTimer.widget.MicroflowTimer" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+  <name>Microflow Timer</name>
+  <description>Times a microflow. Use this widget to invoke a microflow on a regular, timed basis.</description>
+
+  <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAArZJREFUeNp8k0trE1EUx38zmUkmTZM01iY0JvFVrQ/EqhUUxYouFHGl
+2K07FT+FH0HQlRuXgoK4kiJKVejCokGxPqq2Nk1M2zQ1TTTtdCYz1zvjwk3qgZnL5cz5n/+DUYQQ
+tCvLssTEhw/MVavktveTWn1F2FmgZmpMLero8R0cOnQYlXVqYmKCheVl9gwOsjW7ifFvNo3fFvGg
+zcHcCqHmO968Hm8PUCwWRWl+nlx/P7pkqClCMrFpuV5XxbYE25IOa7VJtHYAM4UCsVQK27b5KZ81
+CTJTmKaR1dB0geu6COGydaPensFyrUaks5OW4xAJhTAkQF3K+d0wWWlKwFWXFVP2dLM9A2+DVx3B
+IJuTSW7dvk25OMvdJ0kJbNLRESWXjnD2aOofwOT3knj/uUhhvka1VOBYrIu+XTupN5tcu36dlmVx
+4dIlEokErqTfWLOp1X+heDF+mS6JsbffwDNM16lWFliqzHLl2mUMTSMgFwSlFLvVQnj65T0g76OP
+H6OWK0ti9NUnwkaQVLKL3p4E2UyWkBHjwb2HGPJDD9Qz1BsOBAJEIxHyY2P+GTh1bvhGc61FTyKK
+4whOH9lL07RZNhWmpmYZffqMrmiYDYkuH+BHqcTTkRGf7dDQENrXQoVMutsfarlSgqayb0ea8nyF
+mc4EpR8r3LzzgBMHcr658XicTCZDOp2mXq+j/Vq1ZEPBsls40nxHvjw5WzJJ8p/LRDdAKNLN8PB5
+32xFUVBV1T8Nw0Dr7Y4xt9igMxL2GejStKniIqP5IqYwUIMOA31Zb6vSLnJ1/64Mc0sNGZeFabm8
+zE/z6MVHyktNftabxMM6Jwf71vtl/sZ4f2RcvMzP+FE5QvXNrMnhWFjl6sUjDOzZrPwXwKux/KR4
+/maaL4UqHaEgAzt7OXN8N1s29aw77NUfAQYA7HhI11CN9BAAAAAASUVORK5CYII=</icon>
+
+    <properties>
+		<property key="interval" type="integer" defaultValue="30000">
+			<caption>Interval (in ms)</caption>
+			<category>Behavior</category>
+			<description>
+				Defines how often the microflow is called. Note that the inteval is in milliseconds, so the default, 30000, equals 30 seconds. Note that, unless Execute Once is set to true, the microflow is invoked immediately after loading the form for the first time. 
+			</description>
+		</property>
+        <property key="once" type="boolean" defaultValue="false">
+			<caption>Execute once</caption>
+			<category>Behavior</category>
+			<description>If true, the microflow will be invoked only once, and interval defines after how many seconds. </description>
+		</property>
+        <property key="startatonce" type="boolean" defaultValue="true">
+			<caption>Start at once</caption>
+			<category>Behavior</category>
+			<description>If true (and execute once is true), the microflow will be invoked the first time if the widget has loaded. If false, the microflow will be invoked the first time after interval has passed. </description>
+		</property>        
+        <property key="microflow" type="microflow" required="true">
+            <caption>Microflow</caption>
+            <category>Behavior</category>
+            <description>The microflow to be executed. If the microflow returns false, it will not be executed any longer until the context changes.</description>
+                  <returnType type="Boolean"/>
+            </property>		
+    </properties>
+</widget>
+
