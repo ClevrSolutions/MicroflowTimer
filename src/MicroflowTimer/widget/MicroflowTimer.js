@@ -14,13 +14,13 @@
 
 */
 define([
-	'dojo/_base/declare',
-	'mxui/widget/_WidgetBase',
-	'dojo/_base/lang'
+	"dojo/_base/declare",
+	"mxui/widget/_WidgetBase",
+	"dojo/_base/lang"
 ], function (declare, _WidgetBase, lang) {
 	'use strict';
 
-	return declare('MicroflowTimer.widget.MicroflowTimer', [ _WidgetBase ], {
+	return declare("MicroflowTimer.widget.MicroflowTimer", [ _WidgetBase ], {
 	//DECLARATION
 	inputargs: { 
 		interval : 3000,
@@ -87,13 +87,13 @@ define([
 					params: {
 						actionname: this.microflow,
 						applyto: 'selection',
-						caller: this,
+						origin: this.mxform,
 						guids: [ this.dataobject.getGuid() ]
 					},
-					error: function () {
+					error: lang.hitch(this, function () {
 						logger.error(this.id + "error: XAS error executing microflow");
 						//note: error does not set blocked to false: microflows should not throw errors
-					},
+					}),
 					callback: lang.hitch(this, function (data) {
 						var result = !!data;
 						if (result === false) { //received false, stop the stuff
@@ -134,7 +134,7 @@ define([
 	uninitialize : function(){
 		this.stop();
 	}
-	});
+		});
 	});
 
-require([ 'MicroflowTimer/widget/MicroflowTimer' ]);
+require([ "MicroflowTimer/widget/MicroflowTimer" ]);
