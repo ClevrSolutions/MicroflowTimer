@@ -13,11 +13,15 @@
 	The microflow timer can be used to execute a microflow on a regular, timed basis. 
 
 */
-dojo.provide("MicroflowTimer.widget.MicroflowTimer");
+define([
+	"dojo/_base/declare",
+	"mxui/widget/_WidgetBase",
+	"dojo/_base/lang"
+], function (declare, _WidgetBase, lang) {
+	'use strict';
 
-mendix.widget.declare("MicroflowTimer.widget.MicroflowTimer", {
+	return declare("MicroflowTimer.widget.MicroflowTimer", [ _WidgetBase ], {
 	//DECLARATION
-	addons       : [mendix.addon._Contextable, mendix.addon._Scriptable],
 	inputargs: { 
 		interval : 3000,
 		once  : false,
@@ -44,16 +48,16 @@ mendix.widget.declare("MicroflowTimer.widget.MicroflowTimer", {
 	},
 	
 	start : function() {
-        this.addOnLoad(dojo.hitch(this, function() { //make sure the thing only starts when completely loaded!
+        this.addOnLoad(lang.hitch(this, function() { //make sure the thing only starts when completely loaded!
             if (this.once)
-                this.handle = window.setTimeout(dojo.hitch(this, function() {
+                this.handle = window.setTimeout(lang.hitch(this, function() {
                     this.execute();
                     this.stopped = true;
                 }), this.interval);
             else {
                 if (this.startatonce)
                     this.execute(); //invoke directly as well
-                this.handle = window.setInterval(dojo.hitch(this, this.execute), this.interval);
+                this.handle = window.setInterval(lang.hitch(this, this.execute), this.interval);
             }
         }));
 	},
@@ -73,29 +77,31 @@ mendix.widget.declare("MicroflowTimer.widget.MicroflowTimer", {
 	},
 	
 	execute : function() {
-		if (this.dataobject != null && this.dataobject.getGUID && this.dataobject.getGUID())
+		if (this.dataobject != null && this.dataobject.getGuid && this.dataobject.getGuid())
 		{
 			//microflow set, not already calling a microflow
 			if (this.microflow != '' && this.blocked == false)
 			{
 				this.blocked = true;
-				mx.processor.xasAction({
-					error       : function() {
+				mx.data.action({
+					params: {
+						actionname: this.microflow,
+						applyto: 'selection',
+						origin: this.mxform,
+						guids: [ this.dataobject.getGuid() ]
+					},
+					error: lang.hitch(this, function () {
 						logger.error(this.id + "error: XAS error executing microflow");
 						//note: error does not set blocked to false: microflows should not throw errors
-					},
-					callback    : dojo.hitch(this, function(data) {
+					}),
+					callback: lang.hitch(this, function (data) {
 						var result = !!data;
 						if (result === false) { //received false, stop the stuff
 							this.stopped = true;
 							this.stop();
 						}
 						this.blocked = false;
-					}),
-					actionname  : this.microflow,
-					applyto     : 'selection',
-					caller : this,
-					guids       : [this.dataobject.getGUID()]
+					})
 				});
 			}			
 		}
@@ -103,15 +109,19 @@ mendix.widget.declare("MicroflowTimer.widget.MicroflowTimer", {
 	
 	postCreate : function(){
 		logger.debug(this.id + ".postCreate");
-		this.offerInterfaces(["close"]);
-		this.initContext();
-		this.actRendered();
+		// this.offerInterfaces(["close"]);
+		// this.initContext();
+		// this.actRendered();
+		// Deprecated functions
 	},
 	
 	applyContext : function(context, callback){
 		logger.debug(this.id + ".applyContext"); 
 		if (context) 
-			mx.processor.getObject(context.getActiveGUID(), dojo.hitch(this, this.setDataobject));
+		mx.data.get({
+			guid: context.trackObject._guid,
+			callback: lang.hitch(this, this.setDataobject)
+		});
 		else
 			logger.warn(this.id + ".applyContext received empty context");
 		callback && callback();
@@ -124,4 +134,7 @@ mendix.widget.declare("MicroflowTimer.widget.MicroflowTimer", {
 	uninitialize : function(){
 		this.stop();
 	}
-});
+		});
+	});
+
+require([ "MicroflowTimer/widget/MicroflowTimer" ]);
